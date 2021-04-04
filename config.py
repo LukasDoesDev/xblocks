@@ -3,10 +3,10 @@ fiat_currency = 'eur'
 fiat_currency_suffix = '€'
 fiat_currency_prefix = ''
 crypto_currencies = ['xmr', 'eth', 'btc']
-crypto_interval = 20000 # in milliseconds
+crypto_interval = 40000 # in milliseconds
 
 # Weather
-weather_interval = 20000 # in milliseconds
+weather_interval = 40000 # in milliseconds
 weather_location = 'Helsinki'
 fetch_weather = True
 

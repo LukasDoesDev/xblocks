@@ -18,12 +18,12 @@ fiat_currency|`'eur'`|Fiat currency to use
 fiat_currency_suffix|`'€'`|Fiat currency suffix
 fiat_currency_prefix|`''`|Fiat currency prefix
 crypto_currencies|`['xmr', 'eth', 'btc']`|Crypto currencies to fetch
-crypto_interval|`20000`|Crypto currency fetch interval in milliseconds
+crypto_interval|`40000`|Crypto currency fetch interval in milliseconds
 
 ### Weather
 Key|Default Value|Description
 ---|---|---
-weather_interval|`20000`|Weather currency fetch interval in milliseconds
+weather_interval|`40000`|Weather currency fetch interval in milliseconds
 weather_location|`'Helsinki'`|Weather location
 fetch_weather|`True`|Whether to fetch the weather
 
