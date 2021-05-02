@@ -145,7 +145,7 @@ def create_crypto_thread():
             'get_url': get_crypto_url,
             'cache_key': 'price',
             'get_interval': get_crypto_interval,
-            'use_json': True
+            'use_json': True,
         }],
     })
     t.start()
@@ -163,7 +163,7 @@ def create_weather_thread():
             'get_url': lambda: 'https://wttr.in/' + config.weather_location + '?format=%t',
             'cache_key': 'weather',
             'get_interval': get_weather_interval,
-            'use_json': False
+            'use_json': False,
         }],
     })
     t.start()
