@@ -4,6 +4,7 @@ fiat_currency_suffix = '€'
 fiat_currency_prefix = ''
 crypto_currencies = ['xmr', 'eth', 'btc']
 crypto_interval = 40000 # in milliseconds
+fetch_crypto = True
 
 # Weather
 weather_interval = 40000 # in milliseconds
@@ -16,6 +17,9 @@ use_emoji = True # use emoji instead of name
 suffix = '     .'
 debug = False
 
+def myfn():
+    return "12345"
+
 blocks = [
     # command       name           icon     update interval in milliseconds
     ("price xmr",   "Monero 🔒",   "🔒",    1000),
@@ -24,6 +28,7 @@ blocks = [
     ("weather",     "Weather ⛅",  "⛅",    1000),
     ("time",        "Time {}",     "{}",    1000),
     ("date",        "Date 📅",     "📅",    1000),
+    # (myfn,          "My Function", "✨",    1000)
     # ("datetime",    "Date&Time",   "DT",    1000),
     # ("cmd fortune", "Fortune",     "🇫",    10000),
 ]

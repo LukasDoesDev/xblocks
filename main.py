@@ -62,7 +62,9 @@ def block_fn(block):
         return do_exit()
     while getattr(t, "do_run", True):
         # TODO do stuff here
-        if 'price ' in block[0]:
+        if callable(block[0]):
+            blocks_cached_data[block[0]] = block[0]()
+        elif 'price ' in block[0]:
             # is crypto handler
             cryptos_cache = blocks_cached_data.get('price', 'Loading')
             if cryptos_cache == 'Loading':
@@ -90,7 +92,7 @@ def block_fn(block):
         elif block[0] == 'datetime':
             blocks_cached_data[block[0]] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
         else:
-            pass # is not crypto handler
+            pass # is invalid
         time.sleep(block[3] / 1000)
     if config.debug:
         print("Stopped " + t.name + " thread.")
