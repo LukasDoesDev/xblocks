@@ -44,9 +44,9 @@ Command|Example|Description
 `time`|-|Returns the current time
 `date`|-|Returns the current date
 `datetime`|-|Returns the current date and time
-`cmd <command>`|`cmd echo hi`|Returns the specified command's output
+`sh <command>`|`sh echo hi`|Returns the specified command's output
 
 ### Block specification
 ```py
-("price xmr",   "Monero 🔒",   "🔒",    1000),
+("price xmr",   "🔒",    1000),
 ```

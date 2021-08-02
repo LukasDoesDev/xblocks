@@ -1,3 +1,113 @@
+import subprocess, threading, time, importlib, sys, requests
+
+import config
+
+threads = []
+
+def block_tup_to_class(tup):
+    block_module = importlib.import_module('commands.' + tup[0])
+    block = block_module.Block(tup[3])
+    block.type = tup[0]
+    block.icon = tup[1]
+    block.interval = tup[2]
+    return block
+
+blocks = list(map(block_tup_to_class, config.blocks))
+
+
+def setroot(name):
+    name = name + config.suffix
+    return subprocess.run(["xsetroot", "-name", name])
+
+def block_fn(block):
+    t = threading.currentThread()
+    if not block:
+        return stop_threads()
+    while getattr(t, "do_run", True):
+        block.fetch()
+        time.sleep(block.interval / 1000)
+
+def create_blocks_threads():
+    global threads
+    stop_threads()
+    threads = []
+    for block in blocks:
+        t = threading.Thread(
+            target=block_fn,
+            daemon=True,
+            args=[block] # have to use either [block] or (block,)
+        )
+        t.start()
+        threads.append(t)
+
+def block_to_str(block):
+    prefix = block.get_icon() if block.override_icon else block.icon
+    content = block.content
+    return prefix + content
+
+def stop_threads():
+    for t in threads:
+        t.do_run = False
+    for t in threads:
+        if not t.is_alive():
+            t.join() # Waits until thread terminates
+
+def construct_multi_price_url(inputs, outputs):
+    return f'''https://min-api.cryptocompare.com/data/pricemulti?fsyms={','.join(inputs)}&tsyms={','.join(outputs)}'''
+
+def fetch_crypto_fn():
+    url = construct_multi_price_url(config.crypto_currencies, [config.fiat_currency])
+    crypto_module = importlib.import_module('commands.crypto')
+    t = threading.currentThread()
+    while getattr(t, "do_run", True):
+        res = requests.get(url)
+        data = res.json()
+
+        crypto_module.Block.cache = data
+
+        time.sleep(config.crypto_interval / 1000)
+
+def create_crypto_thread():
+    t = threading.Thread(
+        target=fetch_crypto_fn,
+        daemon=True
+    )
+    t.start()
+    threads.append(t)
+
+def main():
+    create_blocks_threads()
+    if len(config.crypto_currencies) != 0:
+        create_crypto_thread()
+    def setter_thread_fn():
+        t = threading.currentThread()
+        while getattr(t, "do_run", True):
+            blocks_strs = map(block_to_str, blocks)
+            root_str = config.delimeter.join(blocks_strs)
+            print(root_str)
+            if '--no-setroot' not in sys.argv:
+                setroot(root_str)
+            time.sleep(config.interval / 1000)
+
+    global threads
+    t = threading.Thread(target=setter_thread_fn, daemon=True, name='setter_thread')
+    t.start()
+    threads.append(t)
+
+    while True:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            print("Recieved SIGINT, stopping xblocks")
+            stop_threads()
+            break
+
+if __name__ == "__main__":
+    main()
+
+import sys
+sys.exit()
+
 import subprocess, threading, requests, json, datetime, time, importlib, sys
 
 config = importlib.import_module('config')
@@ -42,7 +152,7 @@ def block_to_str(block):
         content = content[0]
     if prefix == '{}' and block[0] == 'time':
         prefix = prefix.format(get_clock_icon())
-    return prefix + ' ' + content
+    return prefix + content
 
 def construct_multi_price_url(inputs, outputs):
     return f'''https://min-api.cryptocompare.com/data/pricemulti?fsyms={','.join(inputs)}&tsyms={','.join(outputs)}'''
