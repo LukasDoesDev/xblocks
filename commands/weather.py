@@ -8,4 +8,7 @@ class Block:
     def fetch(self):
         url = 'https://wttr.in/' + self.location + '?format=%t'
         res = requests.get(url)
+        if res.status_code > 299 or res.status_code < 200:
+            self.content = 'Error'.rjust(5)
+            return
         self.content = res.text.rjust(5)
