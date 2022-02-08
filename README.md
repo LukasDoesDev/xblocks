@@ -1,3 +1,5 @@
+# Moved to [GitLab](https://gitlab.com/LukasDoesDev/xblocks)
+
 # xblocks
 
 > super-ultra configurable "blocks" for xsetroot
